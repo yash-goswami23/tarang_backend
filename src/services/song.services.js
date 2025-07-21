@@ -65,7 +65,7 @@ const searchSongs = async (searchQuery)=>{
     const response = await fetch(searchURl);
     if(!response.ok) throw response.body;
     const data = await response.json();
-    // const songs = data.data.results;
+    const songs = data.data.results;
     // return songs;
   
     const mappedSongs = songs.map(mapApiToMusicModel);
