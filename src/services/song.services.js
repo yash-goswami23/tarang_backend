@@ -6,6 +6,17 @@ const saavnSongSearch = "/api/search/songs";
 
 const usedSongUrls = new Set();
 
+const mapApiToMusicModel = (apiSong) => {
+  return {
+    name: apiSong.name,
+    yaer: parseInt(apiSong.year) || null,
+    duration: apiSong.duration,
+    url: apiSong.url,
+    images: apiSong.image?.map(img => img.url) || [],
+    downloadUrl: apiSong.downloadUrl?.map(d => d.url) || [],
+  };
+};
+
 const fetchSongByArtist = async (searchQuery) => {
   try {
     const query = searchQuery.trim().split(" ").join("+");
@@ -34,10 +45,13 @@ const fetchSongByArtist = async (searchQuery) => {
     const selected = shuffled.slice(0, 2);
 
     selected.forEach(song => usedSongUrls.add(song.url));
-
-    // console.log("2 Unique Songs:", selected);
-    return selected;
-
+    let mappedSongs = [];
+    selected.forEach((song) => {mappedSongs.push(mapApiToMusicModel(song))});
+    // console.log("2 Unique Songs:", selected);    
+    // const mappedSongs = selected.map(mapApiToMusicModel);    
+// console.log("Mapped Songs Count:", mappedSongs.length);
+    // return selected;
+    return mappedSongs;
   } catch (error) {
     console.error("Fetch failed:", error);
     return null;
@@ -51,9 +65,12 @@ const searchSongs = async (searchQuery)=>{
     const response = await fetch(searchURl);
     if(!response.ok) throw response.body;
     const data = await response.json();
-    const songs = data.data.results;
-    return songs;
+    // const songs = data.data.results;
+    // return songs;
   
+    const mappedSongs = songs.map(mapApiToMusicModel);
+    return mappedSongs;
+
   } catch (error) {
     console.error("Fetch failed:", error);
     return null;

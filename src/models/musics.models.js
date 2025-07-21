@@ -8,7 +8,6 @@ const musicSchema = new Schema(
         },
         yaer: {
             type:number,
-            required: true,
         },
         duration: {
             type:number,
@@ -27,7 +26,6 @@ const musicSchema = new Schema(
         downloadUrl:[
             {
             type:String,
-            required: true,
             }
         ]
     },
